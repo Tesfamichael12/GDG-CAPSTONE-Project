@@ -5,16 +5,25 @@
 </head>
 <body>
     <h1>Register</h1>
-    <form method="post">
+    <form method="post" action="/api/v1/auth/register/">  <!-- Action updated for registration -->
         {% csrf_token %}
-        <label>Username:</label><br>
-        <input type="text" name="username"><br><br>
         
-        <label>Email:</label><br>
-        <input type="email" name="email"><br><br>
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+        
+        {% if success %}
+            <p style="color: green;">{{ success }}</p>
+        {% endif %}
 
-        <label>Password:</label><br>
-        <input type="password" name="password"><br><br>
+        <label for="username">Username:</label><br>
+        <input type="text" name="username" id="username" required><br><br>
+        
+        <label for="email">Email:</label><br>
+        <input type="email" name="email" id="email" required><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" name="password" id="password" required><br><br>
 
         <input type="submit" value="Register">
     </form>
