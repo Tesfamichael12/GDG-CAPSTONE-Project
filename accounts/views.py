@@ -1,17 +1,18 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate, login
 from rest_framework.views import APIView
-from rest_framework import generics, status
-from rest_framework.permissions import AllowAny
-from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.permissions import AllowAny#, IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+
 from rest_framework_simplejwt.tokens import RefreshToken
-
-
-
+from rest_framework.decorators import api_view
+from rest_framework.authtoken.models import Token
 from .serializers import RegisterSerializer
+
 from .models import User  # Assuming you have a custom User model
 
 
@@ -20,61 +21,46 @@ class RegisterView(APIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
-    
-    
+
     def get(self, request, *args, **kwargs):
         # Render an HTML form for registration
         return render(request, 'register.html')
-    
-    def post(self, request):
-        # Handle registration logic here
-        return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
-    
+
+    def post(self, request,*args,**kwargs):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User registered successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # If you want to add a home view, make sure it's a separate function
     def home_view(request):
-      return HttpResponse("Welcome to the Home Page!")
-    
-    
-    
-    def register_view(request):
-     if request.method == 'POST':
-        User = get_user_model()
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        return HttpResponse("Welcome to the Home Page!")
 
-        if User.objects.filter(username=username).exists():
-            return HttpResponse("Username already exists")
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
 
-        if User.objects.filter(email=email).exists():
-            return HttpResponse("Email already exists")
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists'}, status=400)
 
-        User.objects.create_user(username=username, email=email, password=password)
-        return HttpResponse("✅ Registered successfully!")
+    user = User.objects.create_user(username=username, password=password)
+    refresh = RefreshToken.for_user(user)
+    return Response({
+        'message': 'User created successfully',
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }, status=201)
 
-     return render(request, '/accounts/register.html')
- 
- 
- 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            {"message": "User registered successfully!", "user": serializer.data},
-            status=status.HTTP_201_CREATED,
-            headers=headers,
-        )
+class MyProtectedView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        return Response({"message": f"Hello {request.user.username}!"})
 
 # --- Function-based registration view using serializer ---
-@api_view(['POST'])
-def register(request):
-    serializer = RegisterSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # --- Function-based registration with manual validation ---
@@ -98,22 +84,38 @@ def create_user(request):
     return Response({"message": "User created successfully!"}, status=status.HTTP_201_CREATED)
 
 
-# --- Example views for frontend testing or landing pages ---
-def home_view(request):
-    return HttpResponse("✅ Welcome to the homepage!")
 
+
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny]) 
 def register_view(request):
-    return HttpResponse("📄 This is the register page (HTML view)")
+    serializer = RegisterSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"message": "User registered successfully!"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def login_view(request):
-    return HttpResponse("🔐 This is the login page (HTML view)")
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('home')  # or any page you want
+        else:
+            return render(request, 'accounts/login.html', {'error': 'Invalid credentials'})
+    
+    return render(request, 'accounts/login.html')
 
 def token_refresh_view(request):
     return HttpResponse("♻️ Token refresh logic will be here.")
 
 
-
-
+# --- Logout functionality using JWT ---
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -125,3 +127,12 @@ class LogoutView(APIView):
             return Response({"message": "Logged out successfully"}, status=200)
         except Exception as e:
             return Response({"error": "Invalid token or logout failed"}, status=400)
+@api_view(['GET'])  # Handles GET requests
+@permission_classes([IsAuthenticated])
+def home_view(request):
+    """
+    A simple home view API that returns a welcome message.
+    This can be accessed via a GET request.
+    """
+    data = {"message": "Welcome to the Home View!"}
+    return Response(data)

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+</head>
+<body>
+    <h2>🔐 Login Form</h2>
+    <form method="post">
+        {% csrf_token %}
+        
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{ request.POST.username }}">
+        
+        {% if form.username.errors %}
+            <div class="error">
+                {% for error in form.username.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+        
+        {% if form.password.errors %}
+            <div class="error">
+                {% for error in form.password.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
