@@ -6,7 +6,11 @@ import sys
 
 def main():
     """Run administrative tasks."""
+<<<<<<< HEAD
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'social_media_project.settings')
+=======
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'social_app.settings')
+>>>>>>> 5a21c4e (Add JWT authentication and protect home endpoint)
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
