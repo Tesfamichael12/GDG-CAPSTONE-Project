@@ -19,4 +19,4 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('password2')  # Remove password2 as it's not needed for user creation
         user = User.objects.create_user(**validated_data)
         return user
-
+      

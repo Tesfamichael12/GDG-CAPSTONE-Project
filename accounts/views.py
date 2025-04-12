@@ -22,7 +22,7 @@ class RegisterView(APIView):
     """
     This view allows new users to register by providing a username, email, and password.
     """
-
+    
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
@@ -37,6 +37,7 @@ class RegisterView(APIView):
     # If you want to add a home view, make sure it's a separate function
     def home_view(request):
         return HttpResponse("Welcome to the Home Page!")
+
 
 """ Function-based registration view using serializer """
 @api_view(['POST'])
@@ -61,8 +62,9 @@ def register(request):
         'access': str(refresh.access_token),
     }, status=201)
 
-
+  
 """ Protected view that requires authentication """
+
 class MyProtectedView(APIView):
     permission_classes = [IsAuthenticated]
 
