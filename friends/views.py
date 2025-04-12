@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from accounts.models import User
-from friends.serializers import FollowSerializer
+from friends.serializers import FollowSerializer, UserFollowCountSerializer
 from .models import Follow
 
 class FollowViewSet(viewsets.ModelViewSet):
@@ -48,11 +48,22 @@ class FollowViewSet(viewsets.ModelViewSet):
     def delete(self, request, *args, **kwargs):
         user_id = kwargs.get('user_id')
         user_to_unfollow = get_object_or_404(User, pk=user_id)
-        follow = get_object_or_404(
-            Follow,
+        follow = Follow.objects.filter(
             follower=request.user,
             following=user_to_unfollow
-        )
-        follow.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        ).first()
 
+        if follow:
+            follow.delete()
+            return Response({'status': 'unfollowed'}, status=status.HTTP_204_NO_CONTENT)
+        
+        return Response({'detail': 'Follow relationship does not exist.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class UserFollowCountViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserFollowCountSerializer
+
+    def get_queryset(self):
+        user_id = self.kwargs.get('user_id')
+        return User.objects.filter(id=user_id)
