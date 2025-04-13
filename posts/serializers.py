@@ -1,16 +1,17 @@
 from rest_framework import serializers
 from .models import Post
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
+from users.serializers import UserSerializer
 
-User = get_user_model()
+# User = get_user_model()
 
-class PostUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username']
+# class PostUserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['id', 'username']
 
 class PostSerializer(serializers.ModelSerializer):
-    user = PostUserSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
     likes_count = serializers.IntegerField(read_only=True)
     comments_count = serializers.IntegerField(read_only=True)
     
