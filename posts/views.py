@@ -5,7 +5,7 @@ from django.db.models import Count, Q
 from .models import Post
 from .serializers import PostSerializer, PostDetailSerializer
 from .permissions import IsOwnerOrReadOnly
-from interactions.models import Follow  # Import Follow model
+from friends.models import Follow  # Import Follow model
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
