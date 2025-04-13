@@ -16,38 +16,39 @@ A fully functional social media backend built with Django and Django REST Framew
 
 ### 🔑 Authentication
 
-- **POST** `/api/auth/register/` → User Registration
-- **POST** `/api/auth/login/` → User Login (JWT)
+- **POST** `/accounts/register/` → User Registration
+- **POST** `/accounts/login/` → User Login (JWT)
 
 ### 📝 Posts
 
-- **GET** `/api/posts/` → List all posts
-- **POST** `/api/posts/` → Create a post
-- **GET** `/api/posts/{id}/` → Retrieve a single post
-- **PUT** `/api/posts/{id}/` → Update a post
-- **DELETE** `/api/posts/{id}/` → Delete a post
+- **GET** `/posts/` → List all posts
+- **POST** `/posts/posts/` → Create a post
+- **GET** `/posts/posts/{id}/` → Retrieve a single post
+- **PUT** `/posts/posts/{id}/` → Update a post
+- **DELETE** `/posts/posts/{id}/` → Delete a post
 
 ### ❤️ Likes & Comments
 
-- **POST** `/api/posts/{id}/like/` → Like a post
-- **POST** `/api/posts/{id}/comment/` → Comment on a post
+- **POST** `/posts/posts/{id}/like/` → Like a post
+- **POST** `/posts/posts/{id}/comment/` → Comment on a post
 
 ### 🔄 Follow System
 
-- **POST** `/api/follow/{username}/` → Follow/Unfo llow a user
-- **GET** `/api/followers/` → List followers
-- **GET** `/api/following/` → List following
+- **POST** `/friends/follow/{username}/` → Follow/Unfo llow a user
+- **GET** `/friends/followers/` → List followers
+- **GET** `/friends/following/` → List following
 
 ### 🏆 Profile
 
-- **GET** `/api/profile/{username}/` → View user profile
-- **PUT** `/api/profile/{username}/` → Update user profile
+- **GET** `/users/profile/{username}/` → View user profile
+- **PUT** `/users/profile/{username}/` → Update user profile
 
 ## 📡 API Endpoints Doc **_Swagger_** (Detailed)
 
 For a comprehensive and interactive API documentation, Swagger UI is integrated into the project. You can access it by navigating to:
 
 - **URL**: `http://127.0.0.1:8000/swagger/`
+- **URL**: `http://127.0.0.1:8000/redoc/` 
 
 This provides a user-friendly interface to explore and test all available API endpoints.
 
