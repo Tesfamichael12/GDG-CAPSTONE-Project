@@ -1,17 +1,18 @@
 from rest_framework import serializers
-from .models import Comment, Like, Follow
-from django.contrib.auth import get_user_model
+from .models import Comment, Like
+# from django.contrib.auth import get_user_model
 from posts.models import Post
+from users.serializers import UserSerializer
 
-User = get_user_model()
+# User = get_user_model()
 
-class CommentUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'username']
+# class CommentUserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['id', 'username']
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = CommentUserSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
     
     class Meta:
         model = Comment
@@ -31,38 +32,3 @@ class LikeSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
-
-class FollowSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Follow
-        fields = '__all__'
-        ref_name = "InteractionsFollowSerializer"  # Add a unique ref_name
-
-class FollowSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Follow
-        fields = ['id', 'follower', 'following', 'created_at']
-        read_only_fields = ['id', 'follower', 'created_at']
-    
-    def validate(self, attrs):
-        if attrs['following'] == self.context['request'].user:
-            raise serializers.ValidationError("You cannot follow yourself.")
-        return attrs
-    
-    def create(self, validated_data):
-        validated_data['follower'] = self.context['request'].user
-        return super().create(validated_data)
-
-class FollowerSerializer(serializers.ModelSerializer):
-    follower = CommentUserSerializer()
-    
-    class Meta:
-        model = Follow
-        fields = ['id', 'follower', 'created_at']
-
-class FollowingSerializer(serializers.ModelSerializer):
-    following = CommentUserSerializer()
-    
-    class Meta:
-        model = Follow
-        fields = ['id', 'following', 'created_at']
