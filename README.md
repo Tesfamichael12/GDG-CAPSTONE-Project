@@ -1,17 +1,76 @@
-# Django Social Media App
+# 🚀 Django Social Media API
 
-## Project Overview
+A fully functional social media backend built with Django and Django REST Framework (DRF). This project includes user authentication, post creation, interactions (likes & comments), follow system, and profile management.
 
-The **Django Social Media App** is a web-based application designed to provide users with a platform to connect, share posts, and interact with others. With core features such as creating, editing, and deleting posts, liking and commenting on content, and managing user profiles, this app aims to deliver a Minimum Viable Product (MVP) within a two-week timeframe.
+## 📌 Features
 
-### Key Features:
-- **User Authentication:** Secure user registration, login, and logout functionality.
-- **User Profiles:** Users can create, edit, and view profiles.
-- **Post Management:** Users can create, edit, and delete posts.
-- **Social Interactions:** Users can like/unlike posts and comment on posts.
-- **Follow System:** Users can follow/unfollow other users and view followers and following lists.
+- ✅ User Authentication (JWT-based) 🔐
+- ✅ CRUD for Posts 📝
+- ✅ Like & Comment System ❤️💬
+- ✅ Follow/Unfollow Users 🔄
+- ✅ Profile Management 🏆
+- ✅ CORS Support 🌍
+- ✅ Scalable & Secure Design 🔒
 
-The backend of this project is developed using **Django** and **Django REST Framework (DRF)**, with **SQLite** as the database. The system is built with scalability, security, and user-friendliness in mind, and it includes API documentation via **Swagger** or **Postman** for easy integration and testing.
+## 📡 API Endpoints (Brief)
+
+### 🔑 Authentication
+
+- **POST** `/api/auth/register/` → User Registration
+- **POST** `/api/auth/login/` → User Login (JWT)
+
+### 📝 Posts
+
+- **GET** `/api/posts/` → List all posts
+- **POST** `/api/posts/` → Create a post
+- **GET** `/api/posts/{id}/` → Retrieve a single post
+- **PUT** `/api/posts/{id}/` → Update a post
+- **DELETE** `/api/posts/{id}/` → Delete a post
+
+### ❤️ Likes & Comments
+
+- **POST** `/api/posts/{id}/like/` → Like a post
+- **POST** `/api/posts/{id}/comment/` → Comment on a post
+
+### 🔄 Follow System
+
+- **POST** `/api/follow/{username}/` → Follow/Unfo llow a user
+- **GET** `/api/followers/` → List followers
+- **GET** `/api/following/` → List following
+
+### 🏆 Profile
+
+- **GET** `/api/profile/{username}/` → View user profile
+- **PUT** `/api/profile/{username}/` → Update user profile
+
+## 📡 API Endpoints Doc **_Swagger_** (Detailed)
+
+For a comprehensive and interactive API documentation, Swagger UI is integrated into the project. You can access it by navigating to:
+
+- **URL**: `http://127.0.0.1:8000/swagger/`
+
+This provides a user-friendly interface to explore and test all available API endpoints.
+
+![alt text](./Swagger-demo-images/image.png)
+![alt text](./Swagger-demo-images/image-1.png)
+![alt text](./Swagger-demo-images/image-2.png)
+![alt text](./Swagger-demo-images/image-3.png)
+![alt text](./Swagger-demo-images/image-4.png)
+
+### 🗂️ Models
+
+In this project, the following models are implemented to support the social media functionality:
+
+- **👤 User**: Represents the users of the platform, including authentication and profile details.
+- **📝 Post**: Stores the content of posts created by users.
+- **❤️ Like**: Tracks likes on posts by users.
+- **💬 Comment**: Manages comments made on posts.
+- **🔄 Follow**: Handles the follow/unfollow relationships between users.
+
+Each model is designed with scalability and security in mind to ensure a robust backend structure.
+
+![alt text](./Swagger-demo-images/image-5.png)
+![alt text](./Swagger-demo-images/image-6.png)
 
 ## Project Structure
 
@@ -32,7 +91,7 @@ Follow the instructions below to get started contributing to the project:
 
 Start by cloning the repository to your local machine. This will create a copy of the project on your local system.
 
-```bash
+````bash
 git clone https://github.com/yourusername/django-social-media-app.git
 
 
@@ -81,3 +140,4 @@ After your pull request is reviewed and approved, it will be merged into the mai
 
 
 If you want to contribute to this project, follow the steps above for cloning, creating branches, pushing, and submitting pull requests. Be sure to follow the coding conventions and test your changes before submitting them.
+````
