@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
 from accounts.models import User
-from friends.serializers import FollowSerializer, UserFollowCountSerializer
+from friends.serializers import FollowSerializer, FollowerSerializer, FollowingSerializer, UserFollowCountSerializer
 from .models import Follow
 
 
